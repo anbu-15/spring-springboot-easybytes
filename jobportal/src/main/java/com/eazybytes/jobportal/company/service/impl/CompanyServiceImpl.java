@@ -7,6 +7,7 @@ import com.eazybytes.jobportal.company.service.ICompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
