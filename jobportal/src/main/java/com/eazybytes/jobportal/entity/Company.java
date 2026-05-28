@@ -1,4 +1,4 @@
-package com.eazybytes.jobportal.company.entity;
+package com.eazybytes.jobportal.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

@@ -2,13 +2,13 @@ package com.eazybytes.jobportal.contact.controller;
 
 import com.eazybytes.jobportal.contact.service.IContactService;
 import com.eazybytes.jobportal.dto.ContactRequestDto;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/contacts")
@@ -18,7 +18,7 @@ public class ContactController {
     private final IContactService iContactService;
 
     @PostMapping(version = "1.0")
-    public ResponseEntity<String> saveContactMsg(@RequestBody ContactRequestDto contactRequestDto) {
+    public ResponseEntity<String> saveContactMsg(@RequestBody @Valid ContactRequestDto contactRequestDto) {
 
         boolean isSaved = iContactService.saveContact(contactRequestDto);
         if (isSaved) {
@@ -29,4 +29,10 @@ public class ContactController {
                     .body("Request Processing Failed");
         }
     }
+
+    @GetMapping
+    public ResponseEntity<String> fetchOpenContacts(@RequestParam @Validated @NotBlank(message = "Status cannot be blank") String status){
+        return ResponseEntity.ok("These are the contacts with given Status : "+status);
+    }
+
 }
