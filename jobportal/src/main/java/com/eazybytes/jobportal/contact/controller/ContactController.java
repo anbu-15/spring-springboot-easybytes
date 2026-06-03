@@ -17,7 +17,7 @@ public class ContactController {
 
     private final IContactService iContactService;
 
-    @PostMapping(version = "1.0")
+    @PostMapping(path = "/public", version = "1.0")
     public ResponseEntity<String> saveContactMsg(@RequestBody @Valid ContactRequestDto contactRequestDto) {
 
         boolean isSaved = iContactService.saveContact(contactRequestDto);
