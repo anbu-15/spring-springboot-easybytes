@@ -7,35 +7,34 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
 
-@Entity
-@Table(name = "CONTACTS")
 @Getter
 @Setter
-public class Contact extends BaseEntity{
-
+@Entity
+@Table(name = "contacts")
+public class Contact extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID", nullable = false)
+    @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "NAME", nullable = false, unique = true)
-    private String name;
-
-    @Column(name = "EMAIL", nullable = false)
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "USER_TYPE", nullable = false, length = 50)
-    private String userType;
-
-    @Column(name = "SUBJECT", nullable = false)
-    private String subject;
-
     @Lob
-    @Column(name = "MESSAGE", nullable = false)
+    @Column(name = "message", nullable = false)
     private String message;
 
-    @ColumnDefault("NEW")
-    @Column(name = "STATUS", nullable = false, length = 20)
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @ColumnDefault("'NEW'")
+    @Column(name = "status", nullable = false, length = 20)
     private String status;
+
+    @Column(name = "subject", nullable = false)
+    private String subject;
+
+    @Column(name = "user_type", nullable = false, length = 50)
+    private String userType;
 
 }
