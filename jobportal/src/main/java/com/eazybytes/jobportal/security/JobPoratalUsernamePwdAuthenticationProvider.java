@@ -29,15 +29,14 @@ public class JobPoratalUsernamePwdAuthenticationProvider implements Authenticati
         String pwd = authentication.getCredentials().toString();
         JobPortalUser jobPortalUser = jobPortalUserRepository.findJobPortalUserByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException(
-                        "User Detailsnot Found for the user: " + username
-                ));
+                        "User details not found for the user: " + username)
+                );
         List<SimpleGrantedAuthority> authorities = List.of(
-                new SimpleGrantedAuthority(jobPortalUser.getRole().getName())
-        );
+                new SimpleGrantedAuthority(jobPortalUser.getRole().getName()));
         if (passwordEncoder.matches(pwd, jobPortalUser.getPasswordHash())) {
             return new UsernamePasswordAuthenticationToken(jobPortalUser, null, authorities);
         } else {
-            throw new BadCredentialsException("Invalid password");
+            throw new BadCredentialsException("Invalid password!");
         }
     }
 
