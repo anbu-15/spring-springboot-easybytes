@@ -75,28 +75,28 @@ public class AuthController {
     @PostMapping(value = "/register/public", version = "1.0")
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequestDto registerRequestDto) {
 
-        CompromisedPasswordDecision decision = compromisedPasswordChecker.check(
-                registerRequestDto.password());
-        if (decision.isCompromised()) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("Password", "Choose a Strong Password"));
-        }
-
-        Optional<JobPortalUser> existingUser = jobPortalUserRepository.findUserByEmailOrMobileNumber(
-                registerRequestDto.email(), registerRequestDto.mobileNumber());
-
-        if (existingUser.isPresent()) {
-            Map<String, String> errors = new HashMap<>();
-            JobPortalUser jobPortalUser = existingUser.get();
-            if (jobPortalUser.getEmail().equalsIgnoreCase(registerRequestDto.email())) {
-                errors.put("email", "Email is already registered");
-            }
-            if (jobPortalUser.getMobileNumber().equals(registerRequestDto.mobileNumber())) {
-                errors.put("mobilenumber", "Mobilenumber is already registered");
-            }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
-        }
+//        CompromisedPasswordDecision decision = compromisedPasswordChecker.check(
+//                registerRequestDto.password());
+//        if (decision.isCompromised()) {
+//            return ResponseEntity
+//                    .status(HttpStatus.BAD_REQUEST)
+//                    .body(Map.of("Password", "Choose a Strong Password"));
+//        }
+//
+//        Optional<JobPortalUser> existingUser = jobPortalUserRepository.findUserByEmailOrMobileNumber(
+//                registerRequestDto.email(), registerRequestDto.mobileNumber());
+//
+//        if (existingUser.isPresent()) {
+//            Map<String, String> errors = new HashMap<>();
+//            JobPortalUser jobPortalUser = existingUser.get();
+//            if (jobPortalUser.getEmail().equalsIgnoreCase(registerRequestDto.email())) {
+//                errors.put("email", "Email is already registered");
+//            }
+//            if (jobPortalUser.getMobileNumber().equals(registerRequestDto.mobileNumber())) {
+//                errors.put("mobilenumber", "Mobilenumber is already registered");
+//            }
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+//        }
         JobPortalUser jobPortalUser = new JobPortalUser();
 
         BeanUtils.copyProperties(registerRequestDto, jobPortalUser);

@@ -55,7 +55,7 @@
     <!-- Application-specific ERROR logs -->
     <!-- ===================== -->
     <logger name="com.eazybytes.jobportal"
-            level="ERROR"
+            level="INFO"
             additivity="false">
         <appender-ref ref="RollingFile"/>
         <appender-ref ref="Console"/>
