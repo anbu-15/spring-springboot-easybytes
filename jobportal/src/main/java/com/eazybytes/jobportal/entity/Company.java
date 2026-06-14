@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.SQLRestriction;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -14,28 +13,42 @@ import java.util.List;
 @Table(name = "COMPANIES")
 @Getter
 @Setter
-@NamedQueries(
-        {
-           @NamedQuery(name = "Company.fetchCompaniesWithJobsByStatus",
-           query = "SELECT DISTINCT c FROM Company c JOIN FETCH c.jobs j WHERE j.status=:Status")
-        }
-)
-@NamedNativeQueries(
-        {
-            @NamedNativeQuery(name = "Company.fetchCompaniesWithJobsByStatusNative",
-            query = "SELECT DISTINCT c.* FROM companies c JOIN jobs j ON c.id=j.company_id WHERE j.status=?1",
-            resultClass = Company.class
-            )
-        }
-)
+@NamedQueries({
+        @NamedQuery(name = "Company.fetchCompaniesWithJobsByStatus", query =
+                "SELECT DISTINCT c FROM Company c JOIN FETCH c.jobs j WHERE j.status = :status"),
+
+        @NamedQuery(name = "Company.updateCompanyDetails",
+                query =
+                        """
+                                        UPDATE Company c SET
+                                                                    c.name = :name,
+                                                                    c.logo = :logo,
+                                                                    c.industry = :industry,
+                                                                    c.size = :size,
+                                                                    c.rating = :rating,
+                                                                    c.locations = :locations,
+                                                                    c.founded = :founded,
+                                                                    c.description = :description,
+                                                                    c.employees = :employees,
+                                                                    c.website = :website,
+                                                                    c.updatedAt = CURRENT_TIMESTAMP,
+                                                                    c.updatedBy = :updatedBy
+                                                                WHERE c.id = :id
+                                """
+        )})
+@NamedNativeQueries({
+        @NamedNativeQuery(name = "Company.fetchCompaniesWithJobsByStatusNative",
+                query = "SELECT DISTINCT c.* FROM companies c JOIN jobs j ON c.id = j.company_id WHERE j.status = ?",
+                resultClass = Company.class)
+})
 public class Company extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID",nullable = false)
+    @Column(name = "ID", nullable = false)
     private Long id;
 
-    @Column(name = "NAME",nullable = false,unique = true)
+    @Column(name = "NAME", nullable = false, unique = true)
     private String name;
 
     @Column(name = "LOGO", length = 500)
@@ -73,7 +86,7 @@ public class Company extends BaseEntity {
      */
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     @BatchSize(size = 10)
-    @SQLRestriction("status='ACTIVE'")
+    // @SQLRestriction("status = 'ACTIVE'")
     private List<Job> jobs = new ArrayList<>();
 
 }

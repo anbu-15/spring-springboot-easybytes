@@ -67,9 +67,9 @@ public class ContactController {
         boolean isUpdated = iContactService.closeContactMsg(Long.valueOf(id)
                 , ApplicationConstants.CLOSED_MESSAGE);
         if (isUpdated) {
-            return ResponseEntity.status(HttpStatus.OK).body("Status updated Successfully");
+            return ResponseEntity.status(HttpStatus.OK).body("Contact message updated Successfully");
         } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Status updated failed");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update contact message");
         }
     }
 }
