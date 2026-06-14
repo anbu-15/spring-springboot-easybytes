@@ -11,12 +11,12 @@ public class PathConfig {
     @Bean(name = "publicPaths")
     public List<String> publicPaths() {
         return List.of(
-                "/api/logging/public",
                 "/api/contacts/public",
                 "/api/auth/login/public",
                 "/api/companies/public",
                 "/api/auth/register/public",
                 "/api/csrf-token/public",
+                "/api/logging/public",
                 "/api/swagger-ui.html",
                 "/swagger-ui/**",
                 "/api/v3/api-docs/**",
@@ -36,9 +36,15 @@ public class PathConfig {
     @Bean(name = "adminPaths")
     public List<String> adminPaths() {
         return List.of(
-                "/api/contacts/page/admin",
+                "/api/contacts/admin",
                 "/api/contacts/sort/admin",
-                "/api/contacts/${id}/status/admin"
+                "/api/contacts/page/admin",
+                "/api/contacts/${id}/status/admin",
+                "/api/companies/admin",
+                "/api/companies/${id}/admin",
+                "/api/users/search/admin",
+                "/api/users/${userId}/role/employer/admin",
+                "/api/users/${userId}/role/employer/admin"
         );
     }
 }

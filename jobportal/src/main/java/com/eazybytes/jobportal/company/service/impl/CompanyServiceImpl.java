@@ -7,21 +7,21 @@ import com.eazybytes.jobportal.dto.JobDto;
 import com.eazybytes.jobportal.entity.Company;
 import com.eazybytes.jobportal.entity.Job;
 import com.eazybytes.jobportal.repository.CompanyRepository;
+import com.eazybytes.jobportal.util.ApplicationUtility;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CompanyServiceImpl implements ICompanyService {
 
     private final CompanyRepository companyRepository;
-
-//    public CompanyServiceImpl(CompanyRepository companyRepository) {
-//        this.companyRepository = companyRepository;
-//    }
 
     @Override
     public List<CompanyDto> getAllCompanies() {
@@ -29,9 +29,42 @@ public class CompanyServiceImpl implements ICompanyService {
         return companyList.stream().map(this::transformCompanyToDto).collect(Collectors.toList());
     }
 
+    @Override
+    public List<CompanyDto> getAllCompaniesForAdmin() {
+        List<Company> companyList = companyRepository.findAll();
+        return companyList.stream().map(this::transformCompanyToDtoForAdmin).collect(Collectors.toList());
+    }
+
+    @Transactional
+    @Override
+    public void deleteCompanyById(Long id) {
+        companyRepository.deleteById(id);
+    }
+
+    @Transactional
+    @Override
+    public boolean updateCompanyDetails(Long id, CompanyDto companyDto) {
+        int updatedRecords = companyRepository.updateCompanyDetails(
+                id, companyDto.name(), companyDto.logo(),
+                companyDto.industry(), companyDto.size(), companyDto.rating(),
+                companyDto.locations(), companyDto.founded(), companyDto.description(),
+                companyDto.employees(), companyDto.website(), ApplicationUtility.getLoggedInUser()
+        );
+        return updatedRecords > 0;
+    }
+
+    @Transactional
+    @Override
+    public boolean createCompany(CompanyDto companyDto) {
+        Company company = transformCompanyDtoToEntity(companyDto);
+        Company savedCompany = companyRepository.save(company);
+        return savedCompany.getId() != null && savedCompany.getId() > 0;
+    }
+
     private CompanyDto transformCompanyToDto(Company company) {
         List<JobDto> jobDtos = company.getJobs().stream()
-                .map(this::transformJobToDto).collect(Collectors.toList());
+                .map(this::transformJobToDto)
+                .collect(Collectors.toList());
         return new CompanyDto(company.getId(), company.getName(), company.getLogo(),
                 company.getIndustry(), company.getSize(), company.getRating(),
                 company.getLocations(), company.getFounded(), company.getDescription(),
@@ -67,4 +100,16 @@ public class CompanyServiceImpl implements ICompanyService {
         );
     }
 
+    private Company transformCompanyDtoToEntity(CompanyDto companyDto) {
+        Company company = new Company();
+        BeanUtils.copyProperties(companyDto, company);
+        return company;
+    }
+
+    private CompanyDto transformCompanyToDtoForAdmin(Company company) {
+        return new CompanyDto(company.getId(), company.getName(), company.getLogo(),
+                company.getIndustry(), company.getSize(), company.getRating(),
+                company.getLocations(), company.getFounded(), company.getDescription(),
+                company.getEmployees(), company.getWebsite(), company.getCreatedAt(), null);
+    }
 }

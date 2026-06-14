@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -18,4 +20,9 @@ public interface ContactRepository extends JpaRepository<Contact, Long> {
 
     List<Contact> findContactsByStatusOrderByCreatedAtAsc(String status);
 
+    @Modifying
+//    @Modifying(flushAutomatically = true,clearAutomatically = true)
+    int updateStatusById(@Param("status") String status,
+                         @Param("id") Long id,
+                         @Param("updatedBy") String updatedBy);
 }
