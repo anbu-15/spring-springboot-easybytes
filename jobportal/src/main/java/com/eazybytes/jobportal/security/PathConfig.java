@@ -33,6 +33,14 @@ public class PathConfig {
         );
     }
 
+    @Bean(name = "employerPaths")
+    public List<String> employerPaths() {
+        return List.of(
+                "/api/jobs/employer",
+                "/api/jobs/${jobId}/status/employer"
+        );
+    }
+
     @Bean(name = "adminPaths")
     public List<String> adminPaths() {
         return List.of(
@@ -47,4 +55,5 @@ public class PathConfig {
                 "/api/users/${userId}/role/employer/admin"
         );
     }
+
 }
