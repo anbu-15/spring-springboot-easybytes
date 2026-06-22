@@ -11,11 +11,13 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
-@Entity
-@Table(name = "JOBS")
 @Getter
 @Setter
+@Entity
+@Table(name = "jobs")
 public class Job extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -120,4 +122,11 @@ public class Job extends BaseEntity {
     @ColumnDefault("'ACTIVE'")
     @Column(name = "status", nullable = false, length = 20)
     private String status;
+
+    @ManyToMany(mappedBy = "savedJobs")
+    private Set<JobPortalUser> savedByUsers = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "job")
+    private Set<JobApplication> jobApplications = new LinkedHashSet<>();
+
 }
