@@ -1,6 +1,18 @@
 package com.eazybytes.jobportal.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.NamedNativeQueries;
+import jakarta.persistence.NamedNativeQuery;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
@@ -16,25 +28,22 @@ import java.util.List;
 @NamedQueries({
         @NamedQuery(name = "Company.fetchCompaniesWithJobsByStatus", query =
                 "SELECT DISTINCT c FROM Company c JOIN FETCH c.jobs j WHERE j.status = :status"),
-
         @NamedQuery(name = "Company.updateCompanyDetails",
                 query =
-                        """
-                                        UPDATE Company c SET
-                                                                    c.name = :name,
-                                                                    c.logo = :logo,
-                                                                    c.industry = :industry,
-                                                                    c.size = :size,
-                                                                    c.rating = :rating,
-                                                                    c.locations = :locations,
-                                                                    c.founded = :founded,
-                                                                    c.description = :description,
-                                                                    c.employees = :employees,
-                                                                    c.website = :website,
-                                                                    c.updatedAt = CURRENT_TIMESTAMP,
-                                                                    c.updatedBy = :updatedBy
-                                                                WHERE c.id = :id
-                                """
+                """
+                        UPDATE Company c SET
+                                                    c.name = :name,
+                                                    c.logo = :logo,
+                                                    c.industry = :industry,
+                                                    c.size = :size,
+                                                    c.rating = :rating,
+                                                    c.locations = :locations,
+                                                    c.founded = :founded,
+                                                    c.description = :description,
+                                                    c.employees = :employees,
+                                                    c.website = :website
+                                                WHERE c.id = :id
+                """
         )})
 @NamedNativeQueries({
         @NamedNativeQuery(name = "Company.fetchCompaniesWithJobsByStatusNative",

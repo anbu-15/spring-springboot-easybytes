@@ -43,7 +43,7 @@ public class RegisterValidationAspect {
         }
         // 2️⃣ Existing user check
         Optional<JobPortalUser> existingUser =
-                jobPortalUserRepository.findUserByEmailOrMobileNumber(
+                jobPortalUserRepository.readUserByEmailOrMobileNumber(
                         request.email(), request.mobileNumber());
 
         if (existingUser.isPresent()) {
