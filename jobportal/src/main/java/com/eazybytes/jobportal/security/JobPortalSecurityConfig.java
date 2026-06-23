@@ -1,6 +1,7 @@
 package com.eazybytes.jobportal.security;
 
 import com.eazybytes.jobportal.security.filter.JwtTokenValidatorFilter;
+import com.eazybytes.jobportal.security.util.CorsProperties;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -47,6 +48,8 @@ public class JobPortalSecurityConfig {
     @Qualifier("jobseekerPaths")
     private final List<String> jobseekerPaths;
 
+//    private final CorsProperties corsProperties;
+
     @Bean
     SecurityFilterChain customSecurityFilterChain(HttpSecurity http) {
         return http.csrf(csrfConfig -> csrfConfig
@@ -65,11 +68,17 @@ public class JobPortalSecurityConfig {
                 .formLogin(flc -> flc.disable())
                 .httpBasic(hbc -> hbc.disable())
                 .exceptionHandling(exception -> exception
-                        .accessDeniedHandler((request, response, accessDeniedException) -> {
-                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                            response.setContentType("application/json");
-                            response.getWriter().write("{\"error\": \"Access Denied\", \"message\": \"You don't have permission to access this resource\"}");
-                        })
+                                .accessDeniedHandler((request, response, accessDeniedException) -> {
+                                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                                    response.setContentType("application/json");
+                                    response.getWriter().write("{\"error\": \"Access Denied\", \"message\": \"You don't have permission to access this resource\"}");
+                                })
+//                        .authenticationEntryPoint((request, response, authException) -> {
+//                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//                            response.setContentType("application/json");
+//                            response.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"Authentication required\"}");
+//                        })
+
                 )
                 .build();
     }
@@ -87,6 +96,21 @@ public class JobPortalSecurityConfig {
         source.registerCorsConfiguration("/**", config);
         return source;
     }
+
+//    @Bean
+//    public CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration config = new CorsConfiguration();
+//        config.setAllowedOrigins(corsProperties.getAllowedOrigins());
+//        config.setAllowedMethods(corsProperties.getAllowedMethods());
+//        config.setAllowedHeaders(corsProperties.getAllowedHeaders());
+//        config.setAllowCredentials(corsProperties.getAllowCredentials());
+//        config.setAllowCredentials(true);
+//        config.setMaxAge(corsProperties.getMaxAge());
+//
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", config);
+//        return source;
+//    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationProvider authenticationProvider) {
