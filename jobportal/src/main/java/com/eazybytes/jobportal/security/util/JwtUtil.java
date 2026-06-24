@@ -40,7 +40,7 @@ public class JwtUtil {
     public String generateJwtToken(Authentication authentication){
         String jwtToken;
         int expirationHours = jwtExpirationHours;
-        // String ttlTime = env.getProperty("cache.jobs.ttl-minutes","5");
+        /// String ttlTime = env.getProperty("cache.jobs.ttl-minutes","5");
         List<String> profiles = Arrays.asList(env.getActiveProfiles());
         if (profiles.contains("prod")) {
             expirationHours = jwtProdExpirationHours;
