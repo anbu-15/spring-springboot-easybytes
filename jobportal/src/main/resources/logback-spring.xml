@@ -13,9 +13,12 @@
               class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>
-                %green(%d{HH:mm:ss.SSS}) %blue(%-5level) %red([%thread]) %yellow(%logger{15}) - %cyan(%msg%n)
+                %green(%d{HH:mm:ss.SSS}) %blue(%-5level) %red([%thread]) %yellow(%logger{15}) -%magenta([traceId=%X{traceId} spanId=%X{spanId}]) -%cyan(%msg%n)
             </pattern>
         </encoder>
+    </appender>
+
+    <appender name="OTEL" class="io.opentelemetry.instrumentation.logback.appender.v1_0.OpenTelemetryAppender">
     </appender>
 
     <!-- ===================== -->
@@ -49,6 +52,7 @@
         <!-- ===================== -->
         <root level="ERROR">
             <appender-ref ref="RollingFile"/>
+            <appender-ref ref="OTEL"/>
         </root>
         <!-- ===================== -->
         <!-- Application-specific ERROR logs -->
@@ -65,7 +69,9 @@
         <!-- Root Logger -->
         <!-- ===================== -->
         <root level="INFO">
+            <appender-ref ref="Console"/>
             <appender-ref ref="RollingFile"/>
+            <appender-ref ref="OTEL"/>
         </root>
         <!-- ===================== -->
         <!-- Application-specific ERROR logs -->
@@ -84,6 +90,7 @@
         <root level="INFO">
             <appender-ref ref="Console"/>
             <appender-ref ref="RollingFile"/>
+            <appender-ref ref="OTEL"/>
         </root>
         <!-- ===================== -->
         <!-- Application-specific ERROR logs -->
@@ -93,6 +100,7 @@
                 additivity="false">
             <appender-ref ref="Console"/>
             <appender-ref ref="RollingFile"/>
+            <appender-ref ref="OTEL"/>
         </logger>
     </springProfile>
 

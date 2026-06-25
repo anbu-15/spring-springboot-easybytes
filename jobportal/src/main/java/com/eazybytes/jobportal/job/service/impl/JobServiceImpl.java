@@ -1,9 +1,13 @@
 package com.eazybytes.jobportal.job.service.impl;
 
+import com.eazybytes.jobportal.dto.JobApplicationDto;
 import com.eazybytes.jobportal.dto.JobDto;
+import com.eazybytes.jobportal.dto.UpdateJobApplicationDto;
 import com.eazybytes.jobportal.entity.Job;
+import com.eazybytes.jobportal.entity.JobApplication;
 import com.eazybytes.jobportal.entity.JobPortalUser;
 import com.eazybytes.jobportal.job.service.IJobService;
+import com.eazybytes.jobportal.repository.JobApplicationRepository;
 import com.eazybytes.jobportal.repository.JobPortalUserRepository;
 import com.eazybytes.jobportal.repository.JobRepository;
 import com.eazybytes.jobportal.util.ApplicationUtility;
@@ -23,6 +27,7 @@ public class JobServiceImpl implements IJobService {
 
     private final JobRepository jobRepository;
     private final JobPortalUserRepository userRepository;
+    private final JobApplicationRepository jobApplicationRepository;
 
     @Override
     public List<JobDto> getEmployerJobs(String employerEmail) {
@@ -80,5 +85,21 @@ public class JobServiceImpl implements IJobService {
         Job job = new Job();
         BeanUtils.copyProperties(jobDto, job);
         return job;
+    }
+
+    @Override
+    public List<JobApplicationDto> getApplicationsByJobForEmployer(Long jobId) {
+        List<JobApplication> applications = jobApplicationRepository.findByJobIdOrderByAppliedAtAsc(jobId);
+        return applications.stream()
+                .map(jobApplication -> ApplicationUtility.mapToJobApplicationDto(jobApplication))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    @Override
+    public boolean updateJobApplication(UpdateJobApplicationDto dto) {
+        int updatedRows = jobApplicationRepository.updateStatusAndNotesById(
+                dto.status().name(), dto.notes(),dto.applicationId(), ApplicationUtility.getLoggedInUser());
+        return updatedRows > 0;
     }
 }
