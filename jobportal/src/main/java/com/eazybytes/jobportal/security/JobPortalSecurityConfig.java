@@ -1,7 +1,6 @@
 package com.eazybytes.jobportal.security;
 
 import com.eazybytes.jobportal.security.filter.JwtTokenValidatorFilter;
-import com.eazybytes.jobportal.security.util.CorsProperties;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
